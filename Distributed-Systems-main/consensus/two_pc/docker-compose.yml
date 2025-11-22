@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+  coordinator:
+    build:
+      context: ../../
+      dockerfile: consensus/two_pc/Dockerfile
+    container_name: twopc-coordinator
+    environment:
+      NODE_ID: "0"
+      HOST_ADDRESS: "0.0.0.0"
+      PEER_MAP: "0:coordinator,1:participant1,2:participant2,3:participant3,4:participant4"
+    ports:
+      - "6100:6100"
+
+  participant1:
+    build:
+      context: ../../
+      dockerfile: consensus/two_pc/Dockerfile
+    container_name: twopc-participant1
+    environment:
+      NODE_ID: "1"
+      HOST_ADDRESS: "0.0.0.0"
+      PEER_MAP: "0:coordinator,1:participant1,2:participant2,3:participant3,4:participant4"
+
+  participant2:
+    build:
+      context: ../../
+      dockerfile: consensus/two_pc/Dockerfile
+    container_name: twopc-participant2
+    environment:
+      NODE_ID: "2"
+      HOST_ADDRESS: "0.0.0.0"
+      PEER_MAP: "0:coordinator,1:participant1,2:participant2,3:participant3,4:participant4"
+
+  participant3:
+    build:
+      context: ../../
+      dockerfile: consensus/two_pc/Dockerfile
+    container_name: twopc-participant3
+    environment:
+      NODE_ID: "3"
+      HOST_ADDRESS: "0.0.0.0"
+      PEER_MAP: "0:coordinator,1:participant1,2:participant2,3:participant3,4:participant4"
+
+  participant4:
+    build:
+      context: ../../
+      dockerfile: consensus/two_pc/Dockerfile
+    container_name: twopc-participant4
+    environment:
+      NODE_ID: "4"
+      HOST_ADDRESS: "0.0.0.0"
+      PEER_MAP: "0:coordinator,1:participant1,2:participant2,3:participant3,4:participant4"
+      DEFAULT_VOTE: "${P4_DEFAULT_VOTE:-commit}"

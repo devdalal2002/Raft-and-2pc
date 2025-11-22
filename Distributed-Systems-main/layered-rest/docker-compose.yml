@@ -1,0 +1,37 @@
+services:
+  node:
+    build: ./node
+    deploy:
+      replicas: 5
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/queue"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - node
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+  test-runner:
+    build:
+      context: ./node
+    environment:
+      - API_URL=http://node:8000/queue
+    depends_on:
+      - node
+      - nginx
+    volumes:
+      - ./tests:/app
+      - ./node/test-runner.sh:/app/test-runner.sh:ro
+    entrypoint: ["/bin/sh", "/app/test-runner.sh"]

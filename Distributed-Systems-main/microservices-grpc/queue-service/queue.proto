@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package queue;
+
+message Track {
+	string id = 1;
+	string title = 2;
+	string artist = 3;
+	int32 votes = 4;
+	int32 duration = 5; // Duration in seconds
+}
+
+message TrackId {
+	string id = 1;
+}
+
+message VoteRequest {
+	string id = 1;
+	bool up = 2;
+}
+
+message QueueList {
+	repeated Track queue = 1;
+}
+
+message QueueResponse {
+	string message = 1;
+	repeated Track queue = 2;
+}
+
+message Empty {}
+
+service QueueService {
+	rpc AddTrack (Track) returns (QueueResponse);
+	rpc RemoveTrack (TrackId) returns (QueueResponse);
+	rpc VoteTrack (VoteRequest) returns (QueueResponse);
+	rpc GetQueue (Empty) returns (QueueList);
+	rpc GetMetadata (TrackId) returns (Track);
+	rpc PlayNext (Empty) returns (Track);
+	rpc GetHistory (Empty) returns (QueueList);
+}

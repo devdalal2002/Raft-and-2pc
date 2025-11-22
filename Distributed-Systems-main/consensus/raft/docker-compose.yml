@@ -1,0 +1,60 @@
+services:
+  node0:
+    build:
+      context: ../../
+      dockerfile: consensus/raft/Dockerfile
+    container_name: raft-node0
+    environment:
+      NODE_ID: "0"
+      HOST_ADDRESS: "0.0.0.0"
+      PEER_MAP: "0:node0,1:node1,2:node2,3:node3,4:node4"
+    ports:
+      - "9000:9000"
+
+  node1:
+    build:
+      context: ../../
+      dockerfile: consensus/raft/Dockerfile
+    container_name: raft-node1
+    environment:
+      NODE_ID: "1"
+      HOST_ADDRESS: "0.0.0.0"
+      PEER_MAP: "0:node0,1:node1,2:node2,3:node3,4:node4"
+    ports:
+      - "9001:9001"
+
+  node2:
+    build:
+      context: ../../
+      dockerfile: consensus/raft/Dockerfile
+    container_name: raft-node2
+    environment:
+      NODE_ID: "2"
+      HOST_ADDRESS: "0.0.0.0"
+      PEER_MAP: "0:node0,1:node1,2:node2,3:node3,4:node4"
+    ports:
+      - "9002:9002"
+
+  node3:
+    build:
+      context: ../../
+      dockerfile: consensus/raft/Dockerfile
+    container_name: raft-node3
+    environment:
+      NODE_ID: "3"
+      HOST_ADDRESS: "0.0.0.0"
+      PEER_MAP: "0:node0,1:node1,2:node2,3:node3,4:node4"
+    ports:
+      - "9003:9003"
+
+  node4:
+    build:
+      context: ../../
+      dockerfile: consensus/raft/Dockerfile
+    container_name: raft-node4
+    environment:
+      NODE_ID: "4"
+      HOST_ADDRESS: "0.0.0.0"
+      PEER_MAP: "0:node0,1:node1,2:node2,3:node3,4:node4"
+    ports:
+      - "9004:9004"

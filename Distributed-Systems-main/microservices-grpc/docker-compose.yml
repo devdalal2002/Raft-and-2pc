@@ -1,0 +1,55 @@
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  queue-service:
+    build:
+      context: ./queue-service
+      dockerfile: Dockerfile
+    environment:
+      - START_PORT=50051
+      - PORT_RANGE=50
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    entrypoint: ["/app/entrypoint.sh"]
+    restart: unless-stopped
+    depends_on:
+      - redis
+
+  test-runner:
+    build:
+      context: ./queue-service
+      dockerfile: Dockerfile
+    entrypoint: ["/app/test-runner.sh"]
+    volumes:
+      - ./tests:/app/tests
+      - ./queue-service/test-runner.sh:/app/test-runner.sh
+      - ./test_runner.py:/app/test_runner.py
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - START_PORT=50051
+      - PORT_RANGE=50
+      - PYTHONPATH=/app
+    depends_on:
+      - nginx-grpc
+      - redis
+    restart: "no"
+
+  nginx-grpc:
+    image: nginx:1.25-alpine
+    volumes:
+      - ./nginx-grpc.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - queue-service
+    ports:
+      - "15051:50051"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 10s
+      timeout: 5s
+      retries: 3

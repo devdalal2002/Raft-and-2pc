@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package twopc;
+
+service VotePhase {
+  rpc RequestVote(Transaction) returns (VoteReply);
+}
+
+service DecisionPhase {
+  rpc GlobalDecision(Decision) returns (Ack);
+  rpc RecordPrepared(PreparedState) returns (Ack);
+}
+
+service CoordinatorControl {
+  rpc Begin(BeginRequest) returns (Decision);
+}
+
+message Transaction {
+  string transaction_id = 1;
+  string operation = 2;
+  string coordinator_id = 3;
+}
+
+message VoteReply {
+  string node_id = 1;
+  bool commit = 2;
+  string reason = 3;
+}
+
+message Decision {
+  string transaction_id = 1;
+  bool commit = 2;
+  string coordinator_id = 3;
+}
+
+message PreparedState {
+  string transaction_id = 1;
+  bool prepared = 2;
+}
+
+message Ack {
+  string node_id = 1;
+  string message = 2;
+}
+
+message BeginRequest {
+  string transaction_id = 1;
+  string operation = 2;
+  repeated string participant_ids = 3;
+}
